@@ -21,12 +21,12 @@ catkin_package()
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
-  /home/eleboss/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/library/CPP/include
-  /home/eleboss/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/include
+  /home/ubuntu/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/library/CPP/include
+  /home/ubuntu/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/include
 )
 link_directories(
-    /home/eleboss/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/bin/Linux64_x64
-    /home/eleboss/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/bin/Linux64_x64/GenApi/Generic
+    /home/ubuntu/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/bin/Linux64_x64
+    /home/ubuntu/dhcam_install_20181107/dh_camera/daheng-sdk-x64/sdk/genicam/bin/Linux64_x64/GenApi/Generic
 
 )
 

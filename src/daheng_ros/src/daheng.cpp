@@ -89,6 +89,24 @@ int main(int argc, char** argv)
     nh.param("camera_name", camera_name, std::string("camera"));
     ROS_INFO_STREAM("Camera name: " << camera_name);
 
+    nh.param("w_mode", w_mode, std::string("manual"));
+    ROS_INFO_STREAM("white balance mode:manual or continuous?" << w_mode);
+
+    nh.param("w_red", w_red, 1.7109);
+    ROS_INFO_STREAM("white balance w_red" << w_red);
+
+    nh.param("w_green", w_green, 1.0);
+    ROS_INFO_STREAM("white balance w_green" << w_mode);
+
+    nh.param("w_blue", w_blue, 1.9258);
+    ROS_INFO_STREAM("white balance w_blue" << w_blue);
+
+    nh.param("gain_mode", gain_mode, std::string("manual"));
+    ROS_INFO_STREAM("gain mode:manual or continuous?" << gain_mode);
+
+    nh.param("gain", gain, 20.0);
+    ROS_INFO_STREAM("gain number:0-24" << gain);
+
     nh.param("set_camera_fps", set_camera_fps, 20.0);
     ROS_INFO_STREAM("Setting camera FPS to: " << set_camera_fps);
 
@@ -232,25 +250,106 @@ int main(int argc, char** argv)
     }
 
     //Set Balance White Mode : Continuous
-    status = GXSetEnum(g_device, GX_ENUM_BALANCE_WHITE_AUTO, GX_BALANCE_WHITE_AUTO_CONTINUOUS);
-    if(status != GX_STATUS_SUCCESS)
+    if(w_mode == "continuous")
     {
-        if (status != GX_STATUS_NOT_IMPLEMENTED)
+        printf("using auto white balance");
+        status = GXSetEnum(g_device, GX_ENUM_BALANCE_WHITE_AUTO, GX_BALANCE_WHITE_AUTO_CONTINUOUS);
+        if(status != GX_STATUS_SUCCESS)
         {
-            GetErrorString(status);
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
         }
     }
-
-    //Set Gain Mode : Continuous
-    status = GXSetEnum(g_device, GX_ENUM_GAIN_AUTO, GX_GAIN_AUTO_CONTINUOUS);
-    if(status != GX_STATUS_SUCCESS)
+    else
     {
-        if (status != GX_STATUS_NOT_IMPLEMENTED)
+        printf("using manual white balance");
+        //set white balance red channel
+        status=GXSetEnum(g_device,GX_ENUM_BALANCE_RATIO_SELECTOR,GX_BALANCE_RATIO_SELECTOR_RED); 
+        if(status != GX_STATUS_SUCCESS)
         {
-            GetErrorString(status);
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        status = GXSetFloat(g_device, GX_FLOAT_BALANCE_RATIO, w_red); 
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        //set white balance green channel
+        status=GXSetEnum(g_device,GX_ENUM_BALANCE_RATIO_SELECTOR,GX_BALANCE_RATIO_SELECTOR_GREEN); 
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        status = GXSetFloat(g_device, GX_FLOAT_BALANCE_RATIO, w_green); 
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        //set white balance blue channel
+        status=GXSetEnum(g_device,GX_ENUM_BALANCE_RATIO_SELECTOR,GX_BALANCE_RATIO_SELECTOR_BLUE); 
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        status = GXSetFloat(g_device, GX_FLOAT_BALANCE_RATIO, w_blue); 
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
         }
     }
-
+    if(gain_mode == "continuous")
+    {
+        //Set Gain Mode : Continuous
+        printf("Using auto gain");
+        status = GXSetEnum(g_device, GX_ENUM_GAIN_AUTO, GX_GAIN_AUTO_CONTINUOUS);
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+    }
+    else
+    {
+        printf("using manual gain");
+        status = GXSetEnum(g_device, GX_ENUM_GAIN_SELECTOR, GX_GAIN_SELECTOR_ALL);
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }
+        status = GXSetFloat(g_device, GX_FLOAT_GAIN, 20.0);
+        if(status != GX_STATUS_SUCCESS)
+        {
+            if (status != GX_STATUS_NOT_IMPLEMENTED)
+            {
+                GetErrorString(status);
+            }
+        }  
+    }
     // enable frame rate setting 
     status = GXSetEnum(g_device, GX_ENUM_ACQUISITION_FRAME_RATE_MODE, GX_ACQUISITION_FRAME_RATE_MODE_ON);
     if(status != GX_STATUS_SUCCESS)
