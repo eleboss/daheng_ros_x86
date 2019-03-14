@@ -56,7 +56,7 @@ void ProcGetImage(ros::NodeHandle &nh)
                 if (pub.getNumSubscribers() > 0){
                     // Check if grabbed frame is actually filled with some content
                     if(!frame.empty()) {
-                        msg = cv_bridge::CvImage(header, "bgr8", frame).toImageMsg();
+                        msg = cv_bridge::CvImage(header, "rgb8", frame).toImageMsg();
                         // Create a default camera info if we didn't get a stored one on initialization
                         if (cam_info_msg.distortion_model == ""){
                             ROS_WARN_STREAM("No calibration file given, publishing a reasonable default camera info.");
@@ -79,44 +79,44 @@ int main(int argc, char** argv)
 {
 
 
-    ros::init(argc, argv, "image_publisher");
+    ros::init(argc, argv, "daheng");
     ros::NodeHandle nh;
-    // ros::NodeHandle _nh("~"); // to get the private params
+    ros::NodeHandle _nh("~"); // to get the private params
 
     ROS_INFO_STREAM("Starting loading ros launch parameters....");
 
 
-    nh.param("camera_name", camera_name, std::string("camera"));
+    _nh.param("camera_name", camera_name, std::string("camera"));
     ROS_INFO_STREAM("Camera name: " << camera_name);
 
-    nh.param("w_mode", w_mode, std::string("manual"));
+    _nh.param("w_mode", w_mode, std::string("manual"));
     ROS_INFO_STREAM("white balance mode:manual or continuous?" << w_mode);
 
-    nh.param("w_red", w_red, 1.7109);
+    _nh.param("w_red", w_red, 1.726);
     ROS_INFO_STREAM("white balance w_red" << w_red);
 
-    nh.param("w_green", w_green, 1.0);
-    ROS_INFO_STREAM("white balance w_green" << w_mode);
+    _nh.param("w_green", w_green, 1.0);
+    ROS_INFO_STREAM("white balance w_green" << w_green);
 
-    nh.param("w_blue", w_blue, 1.9258);
+    _nh.param("w_blue", w_blue, 2.5);
     ROS_INFO_STREAM("white balance w_blue" << w_blue);
 
-    nh.param("gain_mode", gain_mode, std::string("manual"));
+    _nh.param("gain_mode", gain_mode, std::string("manual"));
     ROS_INFO_STREAM("gain mode:manual or continuous?" << gain_mode);
 
-    nh.param("gain", gain, 20.0);
+    _nh.param("gain", gain, 10.0);
     ROS_INFO_STREAM("gain number:0-24" << gain);
 
-    nh.param("set_camera_fps", set_camera_fps, 20.0);
+    _nh.param("set_camera_fps", set_camera_fps, 20.0);
     ROS_INFO_STREAM("Setting camera FPS to: " << set_camera_fps);
 
-    nh.param("set_exposure_time", set_exposure_time, 30000.0);
+    _nh.param("set_exposure_time", set_exposure_time, 30000.0);
     ROS_INFO_STREAM("Setting camera exposure time(us) to: " << set_exposure_time);
 
-    nh.param("frame_id", frame_id, std::string("camera"));
+    _nh.param("frame_id", frame_id, std::string("camera"));
     ROS_INFO_STREAM("Publishing with frame_id: " << frame_id);
 
-    nh.param("camera_info_url", camera_info_url, std::string(""));
+    _nh.param("camera_info_url", camera_info_url, std::string(""));
     ROS_INFO_STREAM("Provided camera_info_url: '" << camera_info_url << "'");
 
 
@@ -252,7 +252,7 @@ int main(int argc, char** argv)
     //Set Balance White Mode : Continuous
     if(w_mode == "continuous")
     {
-        printf("using auto white balance");
+        ROS_INFO_STREAM("using auto white balance");
         status = GXSetEnum(g_device, GX_ENUM_BALANCE_WHITE_AUTO, GX_BALANCE_WHITE_AUTO_CONTINUOUS);
         if(status != GX_STATUS_SUCCESS)
         {
@@ -264,7 +264,9 @@ int main(int argc, char** argv)
     }
     else
     {
-        printf("using manual white balance");
+        // GX_FLOAT_RANGE ratioRange; 
+        // status = GXGetFloatRange(g_device, GX_FLOAT_BALANCE_RATIO, &ratioRange); 
+        ROS_INFO_STREAM("using manual white balance");
         //set white balance red channel
         status=GXSetEnum(g_device,GX_ENUM_BALANCE_RATIO_SELECTOR,GX_BALANCE_RATIO_SELECTOR_RED); 
         if(status != GX_STATUS_SUCCESS)
@@ -274,6 +276,7 @@ int main(int argc, char** argv)
                 GetErrorString(status);
             }
         }
+
         status = GXSetFloat(g_device, GX_FLOAT_BALANCE_RATIO, w_red); 
         if(status != GX_STATUS_SUCCESS)
         {
@@ -320,7 +323,7 @@ int main(int argc, char** argv)
     if(gain_mode == "continuous")
     {
         //Set Gain Mode : Continuous
-        printf("Using auto gain");
+        ROS_INFO_STREAM("Using auto gain");
         status = GXSetEnum(g_device, GX_ENUM_GAIN_AUTO, GX_GAIN_AUTO_CONTINUOUS);
         if(status != GX_STATUS_SUCCESS)
         {
@@ -332,7 +335,9 @@ int main(int argc, char** argv)
     }
     else
     {
-        printf("using manual gain");
+
+
+        ROS_INFO_STREAM("using manual gain");
         status = GXSetEnum(g_device, GX_ENUM_GAIN_SELECTOR, GX_GAIN_SELECTOR_ALL);
         if(status != GX_STATUS_SUCCESS)
         {
@@ -341,7 +346,7 @@ int main(int argc, char** argv)
                 GetErrorString(status);
             }
         }
-        status = GXSetFloat(g_device, GX_FLOAT_GAIN, 20.0);
+        status = GXSetFloat(g_device, GX_FLOAT_GAIN, gain);
         if(status != GX_STATUS_SUCCESS)
         {
             if (status != GX_STATUS_NOT_IMPLEMENTED)
