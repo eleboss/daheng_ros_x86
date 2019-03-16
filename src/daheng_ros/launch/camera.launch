@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-  	<arg name="camera_name" default="cam0" />
+  	<arg name="camera_name" default="cam1" />
   	<!-- set camera fps to -->
-  	<arg name="set_camera_fps" default="20" />
+  	<arg name="set_camera_fps" default="10" />
   	<!-- frame_id for the camera -->
   	<arg name="frame_id" default="$(arg camera_name)" />
 
@@ -19,7 +19,7 @@
     <!-- <arg name="camera_info_url" default="file:///$(find offboard)/config/calibration.yaml" /> -->
     <arg name="camera_info_url" default="" />
 	<!-- visualize on an image_view window the stream generated -->
-	<arg name="visualize" value="true" />
+	<arg name="visualize" value="false" />
 
    	<!-- images will be published at /camera_name/image with the image transports plugins (e.g.: compressed) installed -->
    	<group ns="$(arg camera_name)">
