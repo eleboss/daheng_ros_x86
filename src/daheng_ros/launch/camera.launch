@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-  	<arg name="camera_name" default="cam0" />
+  	<arg name="camera_name" default="cam1" />
   	<!-- set camera fps to -->
-  	<arg name="set_camera_fps" default="20" />
+  	<arg name="set_camera_fps" default="5" />
   	<!-- frame_id for the camera -->
   	<arg name="frame_id" default="$(arg camera_name)" />
 
@@ -10,8 +10,8 @@
   	<arg name="w_red" default="1.58" />
   	<arg name="w_green" default="1.0" />
   	<arg name="w_blue" default="1.9" />
-  	<arg name="gain_mode" default="manual" />
-  	<arg name="gain" default="3.3" />
+  	<arg name="gain_mode" default="continuous" />
+  	<arg name="gain" default="24.0" />
 
   	<!-- By default, calibrations are stored to file://${ROS_HOME}/camera_info/${NAME}.yaml
   	To use your own fill this arg with the corresponding url, e.g.:
