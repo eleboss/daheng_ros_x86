@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-  	<arg name="camera_name" default="cam1" />
+  	<arg name="camera_name" default="cam" />
   	<!-- set camera fps to -->
-  	<arg name="set_camera_fps" default="10" />
+  	<arg name="set_camera_fps" default="5" />
   	<!-- frame_id for the camera -->
   	<arg name="frame_id" default="$(arg camera_name)" />
 
@@ -11,7 +11,8 @@
   	<arg name="w_green" default="1.0" />
   	<arg name="w_blue" default="1.9" />
   	<arg name="gain_mode" default="continuous" />
-  	<arg name="gain" default="24.0" />
+  	<arg name="gain" default="12.0" />
+	<arg name="set_exposure_time" default="8000.0" />
 
   	<!-- By default, calibrations are stored to file://${ROS_HOME}/camera_info/${NAME}.yaml
   	To use your own fill this arg with the corresponding url, e.g.:
@@ -35,6 +36,7 @@
 			<param name="w_blue" type="double" value="$(arg w_blue)" />
 			<param name="gain_mode" type="string" value="$(arg gain_mode)" />
 			<param name="gain" type="double" value="$(arg gain)" />
+			<param name="set_exposure_time" type="double" value="$(arg set_exposure_time)" />
 	    
 		</node>
 
